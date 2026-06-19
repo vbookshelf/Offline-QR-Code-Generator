@@ -9,5 +9,5 @@ xxxxxxxxx
 - Private and offline. No external server connections or tracking.
 - Export codes as PNG or SVG.
 - Supports transparent backgrounds.
-- Works forever.
+- Codes work forever.
 - Free and open source.
