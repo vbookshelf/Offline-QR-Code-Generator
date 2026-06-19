@@ -1,5 +1,5 @@
 # Offline QR Code Generator
-A browser based local desktop tool to quickly create static QR codes and download them in PNG or SVG formats. Built for graphic designers, small businesses and non-profits who want a hassle free way to create QR codes.
+A browser based local desktop tool to quickly create static QR codes and download them in PNG or SVG formats. Built for graphic designers, small businesses and non-profits who just want a quick and simple way to create QR codes.
 
 Working demo:<br>
 xxxxxxxxx
