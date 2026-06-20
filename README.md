@@ -29,6 +29,6 @@ https://qr-static.woza.work/
 
 Version 1.0<br>
 20-June-2026<br>
-First release.
+Prototype. Released for testing.
 
 <br>
