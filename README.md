@@ -5,7 +5,7 @@ Working demo:<br>
 xxxxxxxxx
 
 - Istantly create QR codes for url's, WiFi and other text.
-- No installation needed. Simply download and double-click the index.html file to launch from your desktop. The app will open in your browser.
+- No installation needed. Simply download and double-click the index.html file to launch from your desktop. The app will open in your browser. No internet required.
 - Private and offline. No external server connections or tracking.
 - Export QR codes as PNG or SVG.
 - Supports transparent backgrounds.
