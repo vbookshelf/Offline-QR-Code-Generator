@@ -19,7 +19,7 @@ https://qr-static.woza.work/
 - Mobile optimized.
 - Free and open source.
 
-Feel free to share your thoughts and suggestions in the discussion forum above.
+Feel free to share your thoughts and suggestions in the discussion forum above. If you find a bug or need more features, simply download this code, then use Claude Sonnet 4.6 to modify the index.html file, to fix the bug or to create the features you want.
 
 <br>
 <img src="images/image2.png" alt="App screenshot" height="500">
