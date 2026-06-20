@@ -16,6 +16,7 @@ https://qr-static.woza.work/
 - Supports multiple language scripts e.g. Thai, Kanji and Hindi
 - Static QR Codes never expire.
 - Minimalist UI.
+- Mobile optimized.
 - Free and open source.
 
 <br>
