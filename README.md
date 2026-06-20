@@ -31,6 +31,6 @@ Feel free to share your thoughts and suggestions in the discussion forum above. 
 
 Version 1.0<br>
 20-June-2026<br>
-Prototype. Released for testing.
+First release.
 
 <br>
