@@ -9,7 +9,7 @@ https://qr-static.woza.work/
 
 
 - Instantly create QR codes for websites, WiFi and other text.
-- No installation needed. Simply download and double-click the index.html file to launch from your desktop. The app will open in your browser. No internet required.
+- No installation needed. Simply download and double-click the index.html file to launch from your desktop. The app will open in your browser. 
 - Private. No external server connections or tracking.
 - Export QR codes as PNG or SVG.
 - Supports transparent backgrounds.
