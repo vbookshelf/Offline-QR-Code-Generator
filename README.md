@@ -19,6 +19,8 @@ https://qr-static.woza.work/
 - Mobile optimized.
 - Free and open source.
 
+Feel free to share your thoughts and suggestions in the discussion forum above.
+
 <br>
 <img src="images/image2.png" alt="App screenshot" height="500">
 <p>Minimalist UI</p>
