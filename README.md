@@ -13,6 +13,7 @@ https://qr-static.woza.work/
 - Private. No external server connections or tracking.
 - Export QR codes as PNG or SVG.
 - Supports transparent backgrounds.
+- Supports multiple language scripts e.g. Thai, Kanji and Hindi
 - Static QR Codes never expire.
 - Minimalist UI.
 - Free and open source.
