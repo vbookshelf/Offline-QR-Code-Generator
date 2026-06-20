@@ -177,11 +177,16 @@
   }
   .wifi-col{ flex: 1; min-width: 0; }
   #wifiModeSection > label.eyebrow{ margin-top: 0; }
+  .wifi-hidden-row{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
   .wifi-hidden-label{
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 16px;
     font-size: 14px;
     color: var(--ink-soft);
     cursor: pointer;
@@ -192,6 +197,96 @@
     width: 16px; height: 16px;
     accent-color: var(--ink);
     cursor: pointer;
+  }
+  .wifi-hidden-explainer{
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* ---- info tooltip ---- */
+  .info-tooltip{
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+  .info-tooltip-trigger{
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: #fff;
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+  }
+  .info-tooltip-trigger:hover,
+  .info-tooltip-trigger:focus-visible{
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .info-tooltip-trigger:focus-visible{
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(17,18,21,0.12);
+  }
+  .info-tooltip-bubble{
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    width: 240px;
+    max-width: 80vw;
+    background: var(--ink);
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 500;
+    padding: 9px 11px;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    z-index: 20;
+  }
+  .info-tooltip-bubble::after{
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--ink);
+  }
+  .info-tooltip.show .info-tooltip-bubble{
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+  @media (max-width: 480px){
+    .info-tooltip-bubble{
+      left: auto;
+      right: -6px;
+      transform: translateY(4px);
+    }
+    .info-tooltip-bubble::after{
+      left: auto;
+      right: 14px;
+      transform: none;
+    }
+    .info-tooltip.show .info-tooltip-bubble{
+      transform: translateY(0);
+    }
   }
   .wifi-note{
     font-size: 13px;
@@ -561,10 +656,19 @@
       </div>
     </div>
 
-    <label class="wifi-hidden-label">
-      <input type="checkbox" id="wifiHidden">
-      This network is hidden
-    </label>
+    <div class="wifi-hidden-row">
+      <label class="wifi-hidden-label">
+        <input type="checkbox" id="wifiHidden">
+        This network is hidden
+      </label>
+      <span class="info-tooltip" id="wifiHiddenTooltip">
+        <button type="button" class="info-tooltip-trigger" aria-label="What does &quot;hidden network&quot; mean?" aria-describedby="wifiHiddenTooltipText" aria-expanded="false">?</button>
+        <span class="info-tooltip-bubble" id="wifiHiddenTooltipText" role="tooltip">
+          Only check this if SSID broadcast is turned off in the router settings so phones can't see the WiFi name in a scan. Checking it by mistake can make the QR code fail to connect.
+        </span>
+      </span>
+    </div>
+
     <p class="wifi-note" id="wifiNote"></p>
   </div>
 
@@ -2999,6 +3103,31 @@ qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
   });
   hiddenEl.addEventListener('change', render);
   updateWifiNote();
+
+  // ---- info tooltip (touch-friendly tap toggle) ----
+  var wifiHiddenTooltip = document.getElementById('wifiHiddenTooltip');
+  var wifiHiddenTooltipTrigger = wifiHiddenTooltip.querySelector('.info-tooltip-trigger');
+
+  function closeTooltip(){
+    wifiHiddenTooltip.classList.remove('show');
+    wifiHiddenTooltipTrigger.setAttribute('aria-expanded', 'false');
+  }
+  wifiHiddenTooltipTrigger.addEventListener('click', function(e){
+    e.preventDefault();
+    var isOpen = wifiHiddenTooltip.classList.contains('show');
+    if (isOpen){
+      closeTooltip();
+    } else {
+      wifiHiddenTooltip.classList.add('show');
+      wifiHiddenTooltipTrigger.setAttribute('aria-expanded', 'true');
+    }
+  });
+  document.addEventListener('click', function(e){
+    if (!wifiHiddenTooltip.contains(e.target)) closeTooltip();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeTooltip();
+  });
 
   var level = 'M';
   var currentSvgString = null;
