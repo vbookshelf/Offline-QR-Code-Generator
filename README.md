@@ -16,3 +16,17 @@ https://qr-static.woza.work/
 - Static QR Codes never expire.
 - Minimalist UI.
 - Free and open source.
+
+<br>
+<img src="images/image2.png" alt="App screenshot" height="500">
+<p>Minimalist UI</p>
+
+<br>
+
+## Revision History
+
+Version 1.0<br>
+20-June-2026<br>
+First release.
+
+<br>
