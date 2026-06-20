@@ -205,6 +205,16 @@
     line-height: 1.5;
   }
 
+  .label-tooltip-row{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .label-tooltip-row .eyebrow{
+    margin-bottom: 0;
+  }
+
   /* ---- info tooltip ---- */
   .info-tooltip{
     position: relative;
@@ -238,10 +248,9 @@
     box-shadow: 0 0 0 3px rgba(17,18,21,0.12);
   }
   .info-tooltip-bubble{
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
+    position: fixed;
+    top: 0;
+    left: 0; /* exact position set inline by JS, relative to viewport — avoids clipping by .card's overflow:hidden */
     width: 240px;
     max-width: 80vw;
     background: var(--ink);
@@ -255,38 +264,15 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    transform: translateY(4px);
     transition: opacity 0.12s ease, transform 0.12s ease;
-    z-index: 20;
-  }
-  .info-tooltip-bubble::after{
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 5px solid transparent;
-    border-top-color: var(--ink);
+    z-index: 1000;
   }
   .info-tooltip.show .info-tooltip-bubble{
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
     pointer-events: auto;
-  }
-  @media (max-width: 480px){
-    .info-tooltip-bubble{
-      left: auto;
-      right: -6px;
-      transform: translateY(4px);
-    }
-    .info-tooltip-bubble::after{
-      left: auto;
-      right: 14px;
-      transform: none;
-    }
-    .info-tooltip.show .info-tooltip-bubble{
-      transform: translateY(0);
-    }
   }
   .wifi-note{
     font-size: 13px;
@@ -643,7 +629,15 @@
 
     <div class="wifi-row">
       <div class="wifi-col">
-        <label class="eyebrow label-mono" for="wifiSecurity">Security</label>
+        <div class="label-tooltip-row">
+          <label class="eyebrow label-mono" for="wifiSecurity">Security</label>
+          <span class="info-tooltip" id="wifiSecurityTooltip">
+            <button type="button" class="info-tooltip-trigger" aria-label="Which security option should I choose?" aria-describedby="wifiSecurityTooltipText" aria-expanded="false">?</button>
+            <span class="info-tooltip-bubble" id="wifiSecurityTooltipText" role="tooltip">
+              Choose "WPA / WPA2 / WPA3" for almost any password-protected network. WEP is only for very old routers. "None" is for open networks with no password.
+            </span>
+          </span>
+        </div>
         <select id="wifiSecurity" class="text-input">
           <option value="WPA" selected>WPA / WPA2 / WPA3</option>
           <option value="WEP">WEP</option>
@@ -668,7 +662,7 @@
         </span>
       </span>
     </div>
-
+ 
     <p class="wifi-note" id="wifiNote"></p>
   </div>
 
@@ -3104,29 +3098,64 @@ qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
   hiddenEl.addEventListener('change', render);
   updateWifiNote();
 
-  // ---- info tooltip (touch-friendly tap toggle) ----
-  var wifiHiddenTooltip = document.getElementById('wifiHiddenTooltip');
-  var wifiHiddenTooltipTrigger = wifiHiddenTooltip.querySelector('.info-tooltip-trigger');
-
-  function closeTooltip(){
-    wifiHiddenTooltip.classList.remove('show');
-    wifiHiddenTooltipTrigger.setAttribute('aria-expanded', 'false');
+  // ---- info tooltips (touch-friendly tap toggle, supports multiple) ----
+  var allTooltips = document.querySelectorAll('.info-tooltip');
+  function closeAllTooltips(except){
+    allTooltips.forEach(function(t){
+      if (t === except) return;
+      t.classList.remove('show');
+      var trig = t.querySelector('.info-tooltip-trigger');
+      if (trig) trig.setAttribute('aria-expanded', 'false');
+    });
   }
-  wifiHiddenTooltipTrigger.addEventListener('click', function(e){
-    e.preventDefault();
-    var isOpen = wifiHiddenTooltip.classList.contains('show');
-    if (isOpen){
-      closeTooltip();
+  function positionTooltip(tooltip){
+    var trigger = tooltip.querySelector('.info-tooltip-trigger');
+    var bubble = tooltip.querySelector('.info-tooltip-bubble');
+    var margin = 12;
+    var isMobile = window.matchMedia('(max-width: 480px)').matches;
+    var triggerRect = trigger.getBoundingClientRect();
+    var cardEl = document.querySelector('.card');
+    var cardRect = cardEl ? cardEl.getBoundingClientRect() : { left: 0, right: window.innerWidth };
+
+    if (isMobile){
+      var bubbleWidth = Math.min((cardRect.right - cardRect.left) * 0.86, 300);
+      bubble.style.width = bubbleWidth + 'px';
+      bubble.style.left = (cardRect.left + ((cardRect.right - cardRect.left) - bubbleWidth) / 2) + 'px';
+      bubble.style.top = (triggerRect.bottom + 8) + 'px';
     } else {
-      wifiHiddenTooltip.classList.add('show');
-      wifiHiddenTooltipTrigger.setAttribute('aria-expanded', 'true');
+      var bubbleWidth = 240;
+      bubble.style.width = bubbleWidth + 'px';
+      var left = triggerRect.left + (triggerRect.width / 2) - (bubbleWidth / 2);
+      var minLeft = cardRect.left + margin;
+      var maxLeft = cardRect.right - margin - bubbleWidth;
+      if (left < minLeft) left = minLeft;
+      if (left > maxLeft) left = maxLeft;
+      bubble.style.left = left + 'px';
+      var bubbleHeight = bubble.offsetHeight; // safe to measure: bubble is in normal layout, just invisible
+      bubble.style.top = (triggerRect.top - bubbleHeight - 8) + 'px';
     }
+  }
+  allTooltips.forEach(function(tooltip){
+    var trigger = tooltip.querySelector('.info-tooltip-trigger');
+    trigger.addEventListener('click', function(e){
+      e.preventDefault();
+      var isOpen = tooltip.classList.contains('show');
+      closeAllTooltips(tooltip);
+      if (isOpen){
+        tooltip.classList.remove('show');
+        trigger.setAttribute('aria-expanded', 'false');
+      } else {
+        positionTooltip(tooltip);
+        tooltip.classList.add('show');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    });
   });
   document.addEventListener('click', function(e){
-    if (!wifiHiddenTooltip.contains(e.target)) closeTooltip();
+    if (!e.target.closest('.info-tooltip')) closeAllTooltips();
   });
   document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape') closeTooltip();
+    if (e.key === 'Escape') closeAllTooltips();
   });
 
   var level = 'M';
