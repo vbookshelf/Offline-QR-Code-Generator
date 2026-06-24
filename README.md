@@ -18,6 +18,7 @@ https://qr-static.woza.work/
 - Static QR Codes never expire.
 - Minimalist UI.
 - Mobile optimized.
+- No Monetization/Dark Patterns - no advertisements, cookies, hidden tracking pixels, premium upgrades, or sign-up walls.
 - Free and open source.
 
 Feel free to share your thoughts and suggestions in the discussion forum above. If you find a bug or need more features, simply download the index.html file, then use Claude Sonnet 4.6 to to fix the bug or to create the features you want.
