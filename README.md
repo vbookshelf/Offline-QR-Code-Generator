@@ -29,6 +29,14 @@ Feel free to share your thoughts and suggestions in the discussion forum above. 
 
 <br>
 
+## Notes
+
+- Will work well for typical "clear photo/screenshot of a QR code" use cases.
+- Does not include any image enhancement features.
+- May fail when QR images are noisy, blurry, tiny, damaged or low contrast.
+
+<br>
+
 ### Related project
 
 QR Decoder - Convert QR codes into text offline<br>
