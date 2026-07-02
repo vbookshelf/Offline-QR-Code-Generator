@@ -31,8 +31,8 @@ Feel free to share your thoughts and suggestions in the discussion forum above. 
 
 ### Related project
 
-QR Decoder<br>
-https://qr-decoder.woza.work/
+QR Decoder - Convert QR codes into text offline<br>
+https://github.com/vbookshelf/QR-Decoder
 
 <br>
 
